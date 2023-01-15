@@ -1,26 +1,41 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Button, Link } from '@mui/material';
+import { Outlet, Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import useUser from '../../hooks/useUser';
 
 export function Layout() {
-  const user = useUser();
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+  const logOut = () => {
+    setUser(null);
+    navigate('/login');
+  };
 
   return (
     <>
       <nav>
         <ul>
           <li>
-            <Link to="/">Questionário</Link>
+            <Link component={RouterLink} to="/">
+              Questionário
+            </Link>
           </li>
           <li>
-            <Link to="/questionarios/novo">Novo Questionário</Link>
+            <Link component={RouterLink} to="/questionarios/novo">
+              Novo Questionário
+            </Link>
           </li>
           {user ? (
             <li>
-              <Link to="/login">Sair</Link>
+              <Link component={Button} onClick={logOut}>
+                Sair
+              </Link>
             </li>
           ) : (
             <li>
-              <Link to="/login">Login</Link>
+              <Link component={RouterLink} to="/login">
+                Login
+              </Link>
             </li>
           )}
         </ul>
