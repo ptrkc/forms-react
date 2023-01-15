@@ -1,6 +1,9 @@
 import { Outlet, Link } from 'react-router-dom';
+import useUser from '../../hooks/useUser';
 
 export function Layout() {
+  const user = useUser();
+
   return (
     <>
       <nav>
@@ -11,12 +14,15 @@ export function Layout() {
           <li>
             <Link to="/questionarios/novo">Novo Questionário</Link>
           </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/login">Sair</Link>
-          </li>
+          {user ? (
+            <li>
+              <Link to="/login">Sair</Link>
+            </li>
+          ) : (
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          )}
         </ul>
       </nav>
 
