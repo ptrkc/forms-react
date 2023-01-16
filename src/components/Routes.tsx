@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useUser } from '../hooks/useUser';
 import { AnswerForm } from './pages/AnswerForm';
+import { EditFormPage } from './pages/EditFormPage';
 import { FormsPage } from './pages/FormsPage';
 import { Layout } from './pages/Layout';
 import { NewForm } from './pages/NewForm';
@@ -23,7 +24,10 @@ export function Router() {
             <>
               <Route path="questionario/novo" element={<NewForm />} />
               <Route path="questionario/:id" element={<AnswerForm />} />
-              <Route path="questionario/:id/editar" element={<AnswerForm />} />
+              <Route
+                path="questionario/:id/editar"
+                element={<EditFormPage />}
+              />
             </>
           )}
           {/* {Admin}  */}

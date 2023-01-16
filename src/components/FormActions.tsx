@@ -1,4 +1,5 @@
-import { Button, ButtonGroup, Container } from '@mui/material';
+import { Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { useUser } from '../hooks/useUser';
 
 export function FormActions({
@@ -10,15 +11,32 @@ export function FormActions({
 }) {
   const { user } = useUser();
   const authorized = user?.role === 'admin' || authorId === user?.id;
+
   return (
-    <ButtonGroup size="small" variant="contained">
+    <>
       {authorized && (
         <>
-          <Button>Editar</Button>
-          <Button>Apagar</Button>
+          <Button
+            size="small"
+            variant="contained"
+            component={RouterLink}
+            to={`/questionario/${formId}/editar`}
+          >
+            Editar
+          </Button>
+          <Button size="small" variant="contained">
+            Apagar
+          </Button>
         </>
       )}
-      <Button>Responder</Button>
-    </ButtonGroup>
+      <Button
+        size="small"
+        variant="contained"
+        component={RouterLink}
+        to={`/questionario/${formId}/responder`}
+      >
+        Responder
+      </Button>{' '}
+    </>
   );
 }

@@ -8,36 +8,37 @@ import {
   useForm,
 } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser';
-import { ApiError, apiRequest } from '../../utils/apiRequest';
-import { FormInput } from '../FormInput';
-import { QuestionInput } from '../QuestionInput';
-import { getToday } from '../../utils/getToday';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ApiError, apiRequest } from '../utils/apiRequest';
+import { FormInput } from './FormInput';
+import { User } from '../contexts/UserContext';
+import { QuestionInput } from './QuestionInput';
+import { getToday } from '../utils/getToday';
 
-interface Questions {
+export interface Questions {
   description: string;
   id?: number | string;
 }
-interface NewFormBody {
+export interface CreatedForm {
   name: string;
   description: string;
   date: string;
   questions: Questions[];
 }
 
-export function NewForm() {
-  const { user } = useUser();
+export function EditForm({
+  user,
+  defaultValues,
+}: {
+  user: User;
+  defaultValues: CreatedForm;
+}) {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [errorCode, setErrorCode] = useState<null | number>(null);
 
   const methods = useForm({
-    defaultValues: {
-      name: '',
-      description: '',
-      date: getToday(),
-      questions: [{ description: '', id: `new-${Date.now()}` }],
-    },
+    defaultValues: { ...defaultValues, date: getToday(defaultValues.date) },
   });
   const { fields, append, remove } = useFieldArray({
     rules: { minLength: 1 },
@@ -56,11 +57,11 @@ export function NewForm() {
     append({ description: '', id: `new-${Date.now()}` });
   };
   const mutation = useMutation(
-    async (data: NewFormBody) =>
-      await apiRequest<void>('questionarios', {
+    async (data: CreatedForm) =>
+      await apiRequest<void>(`questionario/${id}`, {
         body: data,
-        method: 'POST',
-        token: user?.token,
+        method: 'PATCH',
+        token: user.token,
       }),
     {
       onSuccess: () => navigate('/questionarios'),
@@ -68,10 +69,14 @@ export function NewForm() {
     }
   );
 
-  const onSubmit: SubmitHandler<NewFormBody> = (data) => {
-    const newQuestions = data.questions.map((question) => ({
-      description: question.description,
-    }));
+  const onSubmit: SubmitHandler<CreatedForm> = (data) => {
+    const newQuestions = data.questions.map((question) => {
+      if (typeof question.id === 'string') {
+        return { description: question.description };
+      } else {
+        return { ...question };
+      }
+    });
     mutation.mutate({ ...data, questions: newQuestions });
   };
 
@@ -93,7 +98,7 @@ export function NewForm() {
           >
             <Stack spacing={2} p={2}>
               <Typography variant="h5" fontWeight="bold">
-                Novo questionário
+                Atualizar questionário
               </Typography>
               <FormInput id="name" label="Nome" required />
               <FormInput id="description" label="Descrição" required />
@@ -131,7 +136,7 @@ export function NewForm() {
             </Stack>
           </Paper>
           <Button type="submit" variant="contained">
-            Criar formulário
+            Atualizar formulário
           </Button>
           {errorCode && (
             <Typography color={'#ba000d'}>

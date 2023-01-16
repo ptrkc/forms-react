@@ -1,7 +1,7 @@
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import { createContext, useState } from 'react';
 
-interface User {
+export interface User {
   token: string;
   id: number;
   role: string;
