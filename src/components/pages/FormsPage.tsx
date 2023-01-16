@@ -12,11 +12,13 @@ import {
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { ChangeEvent } from 'react';
+import { FormActions } from '../FormActions';
 interface Form {
   id: number;
   date: string;
   name: string;
   description: string;
+  user: { name: string; id: number };
 }
 
 function TableMessage({ isLoading }: { isLoading: boolean }) {
@@ -54,6 +56,8 @@ export function FormsPage() {
               <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Descrição</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Autor</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Ações</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -68,6 +72,10 @@ export function FormsPage() {
                   </TableCell>
                   <TableCell>{form.name}</TableCell>
                   <TableCell>{form.description}</TableCell>
+                  <TableCell>{form.user.name}</TableCell>
+                  <TableCell>
+                    <FormActions authorId={form.user.id} formId={form.id} />
+                  </TableCell>
                 </TableRow>
               ))
             )}

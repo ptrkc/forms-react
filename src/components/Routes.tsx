@@ -4,7 +4,6 @@ import { AnswerForm } from './pages/AnswerForm';
 import { FormsPage } from './pages/FormsPage';
 import { Layout } from './pages/Layout';
 import { NewForm } from './pages/NewForm';
-import { NotFound } from './pages/NotFound';
 import { LogIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { UsersPage } from './pages/UsersPage';
@@ -19,10 +18,10 @@ export function Router() {
           <Route index element={<LogIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="questionarios" element={<FormsPage />} />
-          <Route path="questionario/novo" element={<NewForm />} />
           {/* {User}  */}
           {user && (
             <>
+              <Route path="questionario/novo" element={<NewForm />} />
               <Route path="questionario/:id" element={<AnswerForm />} />
               <Route path="questionario/:id/editar" element={<AnswerForm />} />
             </>

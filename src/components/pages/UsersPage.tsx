@@ -1,5 +1,6 @@
 import { useApiQuery } from '../../hooks/useApiQuery';
 import {
+  Button,
   Pagination,
   Paper,
   Stack,

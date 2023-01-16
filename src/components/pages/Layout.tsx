@@ -26,9 +26,11 @@ export function Layout() {
             <Link component={RouterLink} to="/questionarios">
               Questionários
             </Link>
-            <Link component={RouterLink} to="/questionario/novo">
-              Novo Questionário
-            </Link>
+            {user && (
+              <Link component={RouterLink} to="/questionario/novo">
+                Novo Questionário
+              </Link>
+            )}
             {user?.role === 'admin' && (
               <Link component={RouterLink} to="/usuarios">
                 Usuários
@@ -65,9 +67,9 @@ export function Layout() {
         </Stack>
       </nav>
       <Container
+        maxWidth="lg"
         sx={{
           padding: 4,
-          maxWidth: 'md',
         }}
       >
         <Outlet />
