@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useMutation } from 'react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import { useUser } from '../hooks/useUser';
@@ -32,30 +32,36 @@ export function FormActions({
   };
 
   return (
-    <>
-      {authorized && (
-        <>
-          <Button
-            size="small"
-            variant="contained"
-            component={RouterLink}
-            to={`/questionario/${formId}/editar`}
-          >
-            Editar
-          </Button>
-          <Button onClick={deleteForm} size="small" variant="contained">
-            Apagar
-          </Button>
-        </>
-      )}
+    <Stack direction="row" justifyContent={'space-evenly'}>
       <Button
         size="small"
         variant="contained"
         component={RouterLink}
-        to={`/questionario/${formId}/responder`}
+        to={`/questionario/${formId}`}
       >
         Responder
-      </Button>{' '}
-    </>
+      </Button>
+      {authorized && (
+        <Button
+          size="small"
+          variant="contained"
+          component={RouterLink}
+          to={`/questionario/${formId}/editar`}
+          color="secondary"
+        >
+          Editar
+        </Button>
+      )}
+      {authorized && (
+        <Button
+          color="error"
+          onClick={deleteForm}
+          size="small"
+          variant="contained"
+        >
+          Apagar
+        </Button>
+      )}
+    </Stack>
   );
 }
