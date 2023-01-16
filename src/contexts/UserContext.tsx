@@ -5,6 +5,7 @@ interface User {
   token: string;
   id: number;
   role: string;
+  name: string;
 }
 
 interface UserContextProps {
@@ -22,11 +23,12 @@ interface Props {
 }
 
 const decodeUserFromJwt = (token: string) => {
-  const decoded = jwtDecode<{ sub: number; role: string }>(token);
+  const decoded = jwtDecode<{ sub: number; role: string; name: string }>(token);
   const newUser = {
     token: token,
     id: decoded.sub,
     role: decoded.role,
+    name: decoded.name,
   };
   return newUser;
 };

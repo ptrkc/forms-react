@@ -1,47 +1,72 @@
-import { Button, Link } from '@mui/material';
+import { Box, Button, Container, Link, Stack } from '@mui/material';
 import { Outlet, Link as RouterLink, useNavigate } from 'react-router-dom';
-
-import useUser from '../../hooks/useUser';
+import { useUser } from '../../hooks/useUser';
 
 export function Layout() {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const logOut = () => {
     setUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
   return (
     <>
       <nav>
-        <ul>
-          <li>
-            <Link component={RouterLink} to="/">
-              Questionário
+        <Stack
+          padding={2}
+          fontSize={18}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          maxWidth={'md'}
+          marginX="auto"
+        >
+          <Stack direction="row" spacing={4}>
+            <Link component={RouterLink} to="/questionarios">
+              Questionários
             </Link>
-          </li>
-          <li>
-            <Link component={RouterLink} to="/questionarios/novo">
+            <Link component={RouterLink} to="/questionario/novo">
               Novo Questionário
             </Link>
-          </li>
-          {user ? (
-            <li>
-              <Link component={Button} onClick={logOut}>
-                Sair
+          </Stack>
+          <Box>
+            {user ? (
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
+                <span>
+                  Olá, {user.name}
+                  {user.role === 'admin' && ' (admin)'}
+                </span>
+                <Button
+                  fontSize={18}
+                  component={Link}
+                  onClick={logOut}
+                  variant="outlined"
+                >
+                  Sair
+                </Button>
+              </Stack>
+            ) : (
+              <Link component={RouterLink} to="/">
+                Entrar
               </Link>
-            </li>
-          ) : (
-            <li>
-              <Link component={RouterLink} to="/login">
-                Login
-              </Link>
-            </li>
-          )}
-        </ul>
+            )}
+          </Box>
+        </Stack>
       </nav>
-
-      <Outlet />
+      <Container
+        sx={{
+          padding: 4,
+          maxWidth: 'md',
+        }}
+      >
+        <Outlet />
+      </Container>
     </>
   );
 }

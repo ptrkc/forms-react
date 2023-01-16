@@ -1,9 +1,16 @@
-import { Stack, Button, FormControl, Input, InputLabel } from '@mui/material';
+import {
+  Stack,
+  Button,
+  FormControl,
+  Input,
+  InputLabel,
+  Link,
+} from '@mui/material';
 import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router-dom';
-import useUser from '../../hooks/useUser';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useUser } from '../../hooks/useUser';
 import { apiRequest } from '../../utils/apiRequest';
 
 interface LogInBody {
@@ -16,7 +23,7 @@ export function LogIn() {
   const { user, setUser } = useUser();
 
   useEffect(() => {
-    if (user) navigate('/');
+    if (user) navigate('/questionarios');
   }, [user]);
 
   const { control, handleSubmit } = useForm({
@@ -27,9 +34,12 @@ export function LogIn() {
   });
   const mutation = useMutation(
     async (data: LogInBody) =>
-      await apiRequest('auth/login', { body: data, method: 'POST' }),
+      await apiRequest<{ access_token: string }>('auth/login', {
+        body: data,
+        method: 'POST',
+      }),
     {
-      onSuccess: ({ data }) => {
+      onSuccess: (data) => {
         setUser(data.access_token);
       },
       onError: (error) => {
@@ -70,7 +80,12 @@ export function LogIn() {
             render={({ field }) => <Input {...field} />}
           />
         </FormControl>
-        <Button type="submit">Entrar</Button>
+        <Button type="submit" variant="contained">
+          Entrar
+        </Button>
+        <Link component={RouterLink} to="/signup">
+          Não tem conta? Cadastre-se
+        </Link>
       </Stack>
     </form>
   );

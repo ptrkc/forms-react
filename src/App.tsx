@@ -8,22 +8,24 @@ import { NotFound } from './components/pages/NotFound';
 import { LogIn } from './components/pages/SignIn';
 import { SignUp } from './components/pages/SignUp';
 import { UserProvider } from './contexts/UserContext';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <CssBaseline />
       <UserProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
-              <Route index element={<FormsPage />} />
+              <Route index element={<LogIn />} />
+              <Route path="signup" element={<SignUp />} />
               <Route path="questionario/novo" element={<NewForm />} />
               <Route path="questionario/:id" element={<AnswerForm />} />
               <Route path="questionario/:id/editar" element={<AnswerForm />} />
-              <Route path="login" element={<LogIn />} />
-              <Route path="signup" element={<SignUp />} />
+              <Route path="questionarios" element={<FormsPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

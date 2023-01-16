@@ -1,10 +1,13 @@
-interface Options {
+export interface ApiRequestOptions {
   headers?: HeadersInit;
   body?: Record<string, any>;
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 }
 
-export async function apiRequest(route: string, options: Options = {}) {
+export const apiRequest = async <T>(
+  route: string,
+  options: ApiRequestOptions = {}
+) => {
   const fetchOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
@@ -21,19 +24,29 @@ export async function apiRequest(route: string, options: Options = {}) {
       fetchOptions
     );
     if (response.ok) {
-      return { data: await response.json() };
+      return (await response.json()) as T;
     } else {
-      return { error: handleError(response) };
+      return handleError(response);
     }
   } catch (error) {
-    return { error: handleError(error) };
+    return handleError(error);
+  }
+};
+
+class ApiError extends Error {
+  code: number;
+  isNetworkError: boolean;
+
+  constructor(code: number, message: string, isNetworkError: boolean) {
+    super(message);
+    this.code = code;
+    this.isNetworkError = isNetworkError;
   }
 }
 
-function handleError(error: Response | any) {
-  return {
-    code: error.status || 0,
-    message: error.statusText || error.message,
-    isNetworkError: !(error instanceof Response),
-  };
+function handleError(error: Response | any): never {
+  const code = error.status || 0;
+  const message = error.statusText || error.message;
+  const isNetworkError = !(error instanceof Response);
+  throw new ApiError(code, message, isNetworkError);
 }
