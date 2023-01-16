@@ -24,7 +24,7 @@ interface Form {
 function TableMessage({ isLoading }: { isLoading: boolean }) {
   return (
     <TableRow>
-      <TableCell colSpan={4} align="center" sx={{ fontSize: 18, p: 4 }}>
+      <TableCell colSpan={6} align="center" sx={{ fontSize: 18, p: 4 }}>
         {isLoading ? 'Carregando... ' : 'Nenhum questionário'}
       </TableCell>
     </TableRow>
@@ -61,7 +61,7 @@ export function FormsPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading && data.totalCount === 0 ? (
+            {isLoading || data.totalCount === 0 ? (
               <TableMessage isLoading={isLoading} />
             ) : (
               data.forms.map((form) => (
