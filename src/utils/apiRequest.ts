@@ -2,6 +2,7 @@ export interface ApiRequestOptions {
   headers?: HeadersInit;
   body?: Record<string, any>;
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  token?: string;
 }
 
 export const apiRequest = async <T>(
@@ -14,6 +15,12 @@ export const apiRequest = async <T>(
       Accept: 'application/json',
     },
   };
+  if (options.token) {
+    fetchOptions.headers = {
+      ...fetchOptions.headers,
+      Authorization: `Bearer ${options.token}`,
+    };
+  }
   fetchOptions.method = options.method || 'GET';
   if (options.body) {
     fetchOptions.body = JSON.stringify(options.body);

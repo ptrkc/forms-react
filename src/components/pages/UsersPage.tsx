@@ -12,11 +12,12 @@ import {
 } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { ChangeEvent } from 'react';
+import { useUser } from '../../hooks/useUser';
 interface Form {
   id: number;
-  date: string;
+  role: string;
   name: string;
-  description: string;
+  cpf: string;
 }
 
 function TableMessage({ isLoading }: { isLoading: boolean }) {
@@ -29,14 +30,15 @@ function TableMessage({ isLoading }: { isLoading: boolean }) {
   );
 }
 
-export function FormsPage() {
+export function UsersPage() {
+  const { user } = useUser();
   const [params, setSearchParams] = useSearchParams();
   const page = params.get('page') ?? '1';
   const skip = page === '1' ? 0 : (Number(page) - 1) * 10;
-  const { data = { forms: [], totalCount: 0 }, isLoading } = useApiQuery<{
-    forms: Form[];
+  const { data = { users: [], totalCount: 0 }, isLoading } = useApiQuery<{
+    users: Form[];
     totalCount: number;
-  }>(`questionarios?skip=${skip}`);
+  }>(`usuarios?skip=${skip}`, { token: user?.token });
 
   const amountOfPages = Math.ceil(data.totalCount / 10);
 
@@ -51,23 +53,21 @@ export function FormsPage() {
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Role</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Nome</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Descrição</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>CPF</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {isLoading && data.totalCount === 0 ? (
               <TableMessage isLoading={isLoading} />
             ) : (
-              data.forms.map((form) => (
-                <TableRow key={form.id}>
-                  <TableCell>{form.id}</TableCell>
-                  <TableCell>
-                    {new Date(form.date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{form.name}</TableCell>
-                  <TableCell>{form.description}</TableCell>
+              data.users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.cpf}</TableCell>
                 </TableRow>
               ))
             )}

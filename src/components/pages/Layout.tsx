@@ -29,6 +29,11 @@ export function Layout() {
             <Link component={RouterLink} to="/questionario/novo">
               Novo Questionário
             </Link>
+            {user?.role === 'admin' && (
+              <Link component={RouterLink} to="/usuarios">
+                Usuários
+              </Link>
+            )}
           </Stack>
           <Box>
             {user ? (
