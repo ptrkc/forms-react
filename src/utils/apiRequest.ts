@@ -18,6 +18,7 @@ export const apiRequest = async <T>(
   if (options.body) {
     fetchOptions.body = JSON.stringify(options.body);
   }
+  let isErrorHandled = false;
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/${route}`,
@@ -26,14 +27,17 @@ export const apiRequest = async <T>(
     if (response.ok) {
       return (await response.json()) as T;
     } else {
+      isErrorHandled = true;
       return handleError(response);
     }
   } catch (error) {
+    if (isErrorHandled) throw error;
+
     return handleError(error);
   }
 };
 
-class ApiError extends Error {
+export class ApiError extends Error {
   code: number;
   isNetworkError: boolean;
 
