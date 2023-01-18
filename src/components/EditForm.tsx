@@ -19,11 +19,15 @@ export interface Questions {
   description: string;
   id?: number | string;
 }
-export interface CreatedForm {
+export interface EditForm {
   name: string;
   description: string;
   date: string;
   questions: Questions[];
+}
+
+export interface GetForm extends EditForm {
+  id: number;
 }
 
 export function EditForm({
@@ -31,7 +35,7 @@ export function EditForm({
   defaultValues,
 }: {
   user: User;
-  defaultValues: CreatedForm;
+  defaultValues: EditForm;
 }) {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -57,7 +61,7 @@ export function EditForm({
     append({ description: '', id: `new-${Date.now()}` });
   };
   const mutation = useMutation(
-    async (data: CreatedForm) =>
+    async (data: EditForm) =>
       await apiRequest<void>(`questionario/${id}`, {
         body: data,
         method: 'PATCH',
@@ -69,7 +73,7 @@ export function EditForm({
     }
   );
 
-  const onSubmit: SubmitHandler<CreatedForm> = (data) => {
+  const onSubmit: SubmitHandler<EditForm> = (data) => {
     const newQuestions = data.questions.map((question) => {
       if (typeof question.id === 'string') {
         return { description: question.description };
