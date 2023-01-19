@@ -36,22 +36,22 @@ const decodeUserFromJwt = (token: string) => {
 export function UserProvider({ children }: Props) {
   const initialToken = localStorage.getItem('token');
 
-  const [user, setUser] = useState<User | null>(
+  const [user, setStateUser] = useState<User | null>(
     initialToken ? decodeUserFromJwt(initialToken) : null
   );
 
-  const handleSetUser = (token: string | null) => {
+  const setUser = (token: string | null) => {
     if (!token) {
       localStorage.removeItem('token');
-      return setUser(null);
+      return setStateUser(null);
     }
 
     localStorage.setItem('token', token);
-    setUser(decodeUserFromJwt(token));
+    setStateUser(decodeUserFromJwt(token));
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser: handleSetUser }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -10,7 +10,7 @@ import {
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
-import { ApiError, apiRequest } from '../../utils/apiRequest';
+import { apiRequest } from '../../utils/apiRequest';
 import { FormInput } from '../FormInput';
 import { QuestionInput } from '../QuestionInput';
 import { getToday } from '../../utils/getToday';
@@ -29,7 +29,6 @@ interface NewFormBody {
 export function NewForm() {
   const { user } = useUser();
   const navigate = useNavigate();
-  const [errorCode, setErrorCode] = useState<null | number>(null);
 
   const methods = useForm({
     defaultValues: {
@@ -64,7 +63,6 @@ export function NewForm() {
       }),
     {
       onSuccess: () => navigate('/questionarios'),
-      onError: (error: ApiError) => setErrorCode(error.code),
     }
   );
 
@@ -133,11 +131,6 @@ export function NewForm() {
           <Button type="submit" variant="contained">
             Criar formulário
           </Button>
-          {errorCode && (
-            <Typography color={'#ba000d'}>
-              {errorCode && `Erro (${errorCode})`}
-            </Typography>
-          )}
         </Stack>
       </form>
     </FormProvider>

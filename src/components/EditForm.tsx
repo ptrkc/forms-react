@@ -1,6 +1,5 @@
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
 import {
   FormProvider,
   SubmitHandler,
@@ -9,7 +8,7 @@ import {
 } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ApiError, apiRequest } from '../utils/apiRequest';
+import { apiRequest } from '../utils/apiRequest';
 import { FormInput } from './FormInput';
 import { User } from '../contexts/UserContext';
 import { QuestionInput } from './QuestionInput';
@@ -39,7 +38,6 @@ export function EditForm({
 }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [errorCode, setErrorCode] = useState<null | number>(null);
 
   const methods = useForm({
     defaultValues: { ...defaultValues, date: getToday(defaultValues.date) },
@@ -69,7 +67,6 @@ export function EditForm({
       }),
     {
       onSuccess: () => navigate('/questionarios'),
-      onError: (error: ApiError) => setErrorCode(error.code),
     }
   );
 
@@ -142,11 +139,6 @@ export function EditForm({
           <Button type="submit" variant="contained">
             Atualizar formulário
           </Button>
-          {errorCode && (
-            <Typography color={'#ba000d'}>
-              {errorCode && `Erro (${errorCode})`}
-            </Typography>
-          )}
         </Stack>
       </form>
     </FormProvider>

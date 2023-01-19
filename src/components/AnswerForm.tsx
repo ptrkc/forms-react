@@ -1,8 +1,8 @@
 import { Button, Paper, Stack, TextField, Typography } from '@mui/material';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { ApiError, apiRequest } from '../utils/apiRequest';
+import { apiRequest } from '../utils/apiRequest';
 import { User } from '../contexts/UserContext';
 
 interface Answer {
@@ -32,7 +32,6 @@ export function AnswerForm({
   formId: string;
 }) {
   const navigate = useNavigate();
-  const [errorCode, setErrorCode] = useState<null | number>(null);
 
   const mutation = useMutation(
     async (data: Answer[]) =>
@@ -43,7 +42,6 @@ export function AnswerForm({
       }),
     {
       onSuccess: () => navigate('/questionarios'),
-      onError: (error: ApiError) => setErrorCode(error.code),
     }
   );
 
@@ -58,7 +56,6 @@ export function AnswerForm({
         formId: Number(formId),
       });
     });
-    console.log(newAnswersData);
     mutation.mutate(newAnswersData);
   };
 
@@ -113,11 +110,6 @@ export function AnswerForm({
         <Button type="submit" variant="contained">
           Responder
         </Button>
-        {errorCode && (
-          <Typography color={'#ba000d'}>
-            {errorCode && `Erro (${errorCode})`}
-          </Typography>
-        )}
       </Stack>
     </form>
   );
